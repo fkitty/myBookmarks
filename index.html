@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>我的导航</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <header></header>
+    <main >
+        <!--这个容器用来做键盘的居中用-->
+        <div class="wrapper" id="mainxxx"></div>
+    </main>
+    <footer></footer>
+    <!--用js自动生成按键标签-->
+    <script>
+        //1.所有的按键
+        /*var keys = {
+            0:['q','w','e','r','t','y','u','i','o','p'],
+            1:['a','s','d','f','g','h','j','k','l'],
+            2:['z','x','c','v','b','n','m'],
+            length:3
+        }*/
+        //数组是一种特殊的hash
+        //数组的嵌套，数组里面有数组
+        keys = {
+            '0':{0:'q',1:'w',2:'e',3:'r',4:'t',5:'y',6:'u',7:'i',8:'o',9:'p',length:10},
+            '1':{0:'a',1:'s',2:'d',3:'f',4:'g',5:'h',6:'j',7:'k',8:'l',length:9},
+            '2':{0:'z',1:'x',2:'c',3:'v',4:'b',5:'n',6:'m',length:7},
+            'length':3
+        }
+
+        //数据结构hash，存放每个按键对应的东西
+        hash = {
+            'q':'qq.com',
+            'w':'weibo.com',
+            'e':'ele.com',
+            'r':'renren.com',
+            't':'tianya.com',
+            'y':'youtube.com',
+            'u':'uc.com',
+            'i':'iqiyi.com',
+            'o':'opera.com',
+            'p':'undefined',
+            'a':'acfun.tv',
+            's':'sohu.com',
+            'm':'meituan.com'
+        }
+        //这个hash不是数组，不需要有length
+
+        //浏览器中存的hash,它不是hash,它是一个字符串，要用JSON.parse
+        //有的时候zzz这个桶有可能是空的，把一个空的桶拿去parse,有可能会出错null
+        //取出localstorage中的zzz对应的hash
+        hashInlocalStorage = JSON.parse(localStorage.getItem('zzz') || 'null')
+        if(localStorage){
+            hash = hashInlocalStorage
+        }
+        //2.循环访问key,在页面中插入kbd标签
+
+        //插入一个div的步骤
+        //创建一个div
+        //x = document.createElement('div')
+
+        
+        //给div一个落脚点，也就是给他一个爸爸,给html中的main标签加上一个id
+        //append：追加，放入的意思,让zhangsan多出一个孩子div1
+        //y.appendChild(x)
+
+        //创建三个div,创建一个标签，让它做儿子，一直重复
+        //遍历keys，生成kbd标签
+        index = 0
+        while(index < keys['length']){
+            //index的取值为0 1 2
+            //row的取值为第一个数组 第二个数组  第三个数组
+            //row第一次得到keys[0] 第二次keys[1] 第三次keys[2]
+            row = keys[index]//当index为0的时候就要取到keys的第0行
+            console.log(row)
+            div1 = document.createElement('div')
+            mainxxx.appendChild(div1)
+
+            index2 = 0
+            while(index2 < row['length']){
+                //index2取值 0-9 0-8 0-6
+                kbdxxx = document.createElement('kbd')
+                kbdxxx.textContent = row[index2]
+                //打印出的是m中的buttonx,buttonx其实只有一个
+                buttonxxx = document.createElement('button')
+                buttonxxx.textContent = 'Edit'
+                buttonxxx.id = row[index2]
+                buttonxxx.onclick = function(xzkjcnxlkcjlk){
+                    //console.log(buttonxxx)
+                    //console.log('button被点击了')
+                    //被用点击的那个按钮
+                    //不能用buttonxxx,buttonxxx是一个容器
+                    //target就是用户点的那个东西
+                    //xzkjcnxlkcjlk这个hash里面的target对应的hash
+                    //这个hash其实是个元素，元素也是hash,取它的id
+                    key = xzkjcnxlkcjlk['target']['id']//q w er t
+                    //把用户输入的网址存到x中
+                    x = prompt('给我一个网址')//xxx.com
+                    //让这个按钮对用的hash里面的值是x
+                    hash[key] = x //hash变更
+
+                    //使用localStorage存储编辑之后,只能存字符串
+                    //JSON.stringify()变成字符串
+                    //只要hash变了，就把hash存到zzz中
+                    //让localstorage里出现一个叫zzz的桶，桶里的内容就是hash
+                    localStorage.setItem('zzz',JSON.stringify(hash))
+                    console.log(hash)
+                }
+                kbdxxx.appendChild(buttonxxx) 
+                div1.appendChild(kbdxxx)
+                index2 = index2 + 1
+            }
+
+            //给每个div中创建kbd 
+            //kbdxxx = document.createElement('kbd')
+            //z中的文本内容是hi
+            //kbdxxx.textContent = 'hi'
+            //div1.appendChild(kbdxxx)
+            index = index + 1
+
+        }
+
+        //监听键盘事件
+        //1拿到用户按的键
+        //2得到这个键对应的网站
+        //3把当前地址变成新的网站的地址
+        document.onkeypress = function(xzkjcnxlkcjlk){
+            //console.log('我发现你输入了一个键')//只要用户任意按一个键这一行就会执行
+            
+            //xzkjcnxlkcjlk里面包含着你所要知道的所有信息，名字不重要，只是一个容器
+            //console.log('你按键的时候的所有信息是')
+            //打印出hash中key的值，知道用户按的是什么
+            //key的兼容性可能不好
+            //console.log(xzkjcnxlkcjlk['key'])//结果是一个hash
+
+            //用单独的变量把它存下来,知道用户按的什么键
+            key = xzkjcnxlkcjlk['key']//q w e
+            //拿到按键对应的网站
+            website = hash[key]
+            //console.log(website)
+            //打开这个网站,location是个全局变量，当前地址栏的地址,是http协议
+            //location.href = 'http://'+website
+
+            //模拟用户新窗口打开一个页面
+            window.open('http://'+website,'_blank')
+
+        }
+
+    </script>
+
+   
+
+
+
+
+
+
+</body>
+</html>
